@@ -1,5 +1,9 @@
+// bug - return cube back  they inherit same transforms (fixed by mapping the cube state)
+// added animation to scene border and labels on pause and resume
+let lastTransformStates = new Map();
 let scenes = document.querySelectorAll('.scene');
 let currentClass = '';
+
 
 function changeSide(cube, radioGroup) {
   let checkedRadio = radioGroup.querySelector(':checked');
@@ -15,7 +19,7 @@ function changeSide(cube, radioGroup) {
 scenes.forEach(function(scene) {
   // Select the cube and the radio group in this scene
   let cube = scene.querySelector('.cube');
-  let radioGroup = scene.querySelector('.radio-group');
+  let radioGroup = scene.querySelector('.radio-group')
 
   // Set the initial side for this cube
   changeSide(cube, radioGroup);
@@ -35,19 +39,25 @@ scenes.forEach(function(scene) {
 
   cubeHover.addEventListener('mouseover', function() {
     cubeFaces.forEach(function(face) {
+      
       face.style.opacity = '1';
     });
   });
 
   cubeHover.addEventListener('mouseout', function() {
     cubeFaces.forEach(function(face) {
+      
       face.style.opacity = '0.5';
     });
   });
 });
 
+
 scenes.forEach(function(scene) {
   let cube = scene.querySelector('.cube');
+  let labels = scene.querySelectorAll('label');
+  let labelDelay = 0; // Initialize label delay
+  let timeouts = [];
 
   // Generate a random rotation angle between -20 and 20 for each axis
   let randomX = Math.floor(Math.random() * 41) - 20;
@@ -72,6 +82,7 @@ scenes.forEach(function(scene) {
   // Set the content of the style element to the @keyframes rule
   style.innerHTML = `
     @keyframes ${animationName} {
+
       0% {
         transform: translateZ(${randomZZ}px) translateY(${randomYY}px) rotateX(${randomX}deg) rotateY(${randomY}deg) rotateZ(${randomZ}deg);
       }
@@ -105,9 +116,20 @@ scenes.forEach(function(scene) {
     if (!isTransitioning) {
       if (cube.classList.contains('paused')) {
         // If the cube is paused, resume the animation
+        this.parentNode.classList.remove('hovered');
         cube.classList.remove('paused');
+        let lastTransformState = lastTransformStates.get(cube);
         cube.style.transform = lastTransformState;
         console.log(lastTransformState)
+               // Clear all timeouts
+               for (let i = 0; i < timeouts.length; i++) {
+                clearTimeout(timeouts[i]);
+              }
+              timeouts = []; // Reset the timeouts array
+        labels.forEach(function(label) {  // Loop over each label and update its opacity
+          label.style.opacity = "0";
+          
+        });
         
         
         
@@ -131,7 +153,6 @@ scenes.forEach(function(scene) {
         // Set the content of the style element to the @keyframes rule
         style.innerHTML = `
         @keyframes ${animationName} {
-          from { transform: ${lastTransformState} }
           0% {
             transform: ${lastTransformState};
           }
@@ -150,46 +171,32 @@ scenes.forEach(function(scene) {
         // If the cube is not paused, stop the animation and revert to the original state
         cube.classList.add('paused');
         let computedStyle = window.getComputedStyle(cube);
-        lastTransformState = computedStyle.transform;  // Store the current state
+        let lastTransformState = computedStyle.transform;  // Store the current state
+        lastTransformStates.set(cube, lastTransformState);  // Store the last state of this cube
         cube.style.animation = 'none';
         cube.style.transform = lastTransformState;
         isTransitioning = true;  // A transition is about to start
         setTimeout(() => {
-          cube.style.transform = 'translateZ(-512px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+          cube.style.transform = 'translateZ(-512px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)'
+          cube.style.transform = null;
         }, 100);
+        this.parentNode.classList.add('hovered');
+        let labelDelay = 600;  // Reset the label delay to its initial value
+        labels.forEach(function(label) {
+          setTimeout(function() {
+            label.style.opacity = "1";
+          }, labelDelay);
+          labelDelay += 600; 
+        });
       }
     }
   });
+  
 });
 
-
-
-
-
-
-// radios not working. animation returning after click not smooth and reset position
-
-
-
-/*
-// Select the .cube__hover element
-  let cubeHover = scene.querySelector('.cube__hover');
-  
-  let isTransitioning = false;  // Flag to indicate if a transition is happening
-
-  cube.addEventListener('transitionend', function() {
-    // When the transition ends, set isTransitioning to false
-    isTransitioning = false;
-  });
-  
-  cubeHover.addEventListener('click', function() {
-    // Only allow changes if no transition is happening
-    if (!isTransitioning) {
-      if (cube.classList.contains('paused')) {
-        // If the cube is paused, resume the animation
-        cube.classList.remove('paused');
-        cube.style.transform = lastTransformState;
-        
+/* 
+        // Apply the new animation to the cube
+        cube.style.animation = `${animationName} 60s 2s infinite ease-in-out`;
       } else {
         // If the cube is not paused, stop the animation and revert to the original state
         cube.classList.add('paused');
@@ -203,56 +210,6 @@ scenes.forEach(function(scene) {
         }, 100);
       }
     }
-  });
-}); 
-
-*/
-
-
-
-
-
-
-
-
-
-/*let cube = document.querySelector('.cube');
-let radioGroup = document.querySelector('.radio-group');
-let currentClass = '';
-
-function changeSide() {
-  let checkedRadio = radioGroup.querySelector(':checked');
-  let showClass = 'show-' + checkedRadio.value;
-  if ( currentClass ) {
-    cube.classList.remove( currentClass );
-  }
-  cube.classList.add( showClass );
-  currentClass = showClass;
-}
-// set initial side
-changeSide();
-
-radioGroup.addEventListener( 'change', changeSide ); */
-
-
-
-
-
-
-/*
-
-let cubeHover = document.querySelector('#cube__hover');
-let cubeFaces = document.querySelectorAll('.cube__face');
-
-cubeHover.addEventListener('mouseover', function() {
-  cubeFaces.forEach(function(face) {
-    face.style.opacity = '1';
-  });
-});
-
-cubeHover.addEventListener('mouseout', function() {
-  cubeFaces.forEach(function(face) {
-    face.style.opacity = '0.5';
   });
 });
 */

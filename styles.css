@@ -23,11 +23,77 @@ body { font-family: sans-serif;
 .scene {
   width: 512px;
   height: 512px;
-  border: 1px solid #CCC;
+
   margin: 80px;
   perspective: 1024px;
   position: relative; /* Add this to establish a new stacking context */
 }
+.scene::before,
+.scene::after,
+.scene > .cube__hover::before,
+.scene > .cube__hover::after {
+  content: '';
+  position: absolute;
+  background: #ffffff;
+  transition: all 1s;
+}
+
+/* Top border */
+.scene::before {
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+}
+
+/* Right border */
+.scene > .cube__hover::before {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  height: 0;
+}
+
+/* Bottom border */
+.scene::after {
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+}
+
+/* Left border */
+.scene > .cube__hover::after {
+  bottom: 0;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 0;
+}
+
+/* Transition the width and height properties when hovered */
+.scene.hovered::before {
+  transition-delay: 0s;
+  width: 100%;
+}
+
+.scene.hovered > .cube__hover::before {
+  transition-delay: 1s;
+  height: 100%;
+}
+
+.scene.hovered::after {
+  transition-delay: 2s;
+  width: 100%;
+}
+
+.scene.hovered > .cube__hover::after {
+  transition-delay: 3s;
+  height: 100%;
+}
+
+
 
 .cube {
   width: 512px;
@@ -89,5 +155,5 @@ body { font-family: sans-serif;
 
 
 
-label { margin-right: 10px; }
+label { margin-right: 10px; opacity: 0; transition: opacity 1s;}
 
