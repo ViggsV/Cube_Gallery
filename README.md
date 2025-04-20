@@ -27,5 +27,5 @@ This was one of my first ever coding projects, created when I was just starting 
 
 ## How to use
 
-- Link 
+- Link for preview https://viggsv.github.io/Cube_Gallery/
 - Repo clone link https://github.com/ViggsV/Cube_Gallery.git
