@@ -21,7 +21,7 @@ This was one of my first ever coding projects, created when I was just starting 
 - **HTML**  
 - **CSS**  
 - **JavaScript** – DOM manipulation, event handling, animations  
-- **AI-generated images** – from _[Insert Generator Source if applicable, e.g. DALL·E or similar]_
+- **AI-generated images** – from Dall-e https://openai.com/index/dall-e-3/
 
 ---
 
