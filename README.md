@@ -29,3 +29,10 @@ This was one of my first ever coding projects, created when I was just starting 
 
 - Link for preview https://viggsv.github.io/Cube_Gallery/
 - Repo clone link https://github.com/ViggsV/Cube_Gallery.git
+
+## Notes
+
+- This project was originally created as a creative coding challenge during my early learning days.
+- No frameworks were used — it’s all written in vanilla HTML, CSS, and JavaScript.
+- Some animations and layout styles may behave differently across browsers.
+- Made for desktop.
